@@ -1,0 +1,244 @@
+import os
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+students = []
+
+# -----------------------------
+# STUDENT REGISTRATION
+# -----------------------------
+def register_student():
+    try:
+        roll = int(input("Enter Roll Number: "))
+        name = input("Enter Student Name: ")
+        age = int(input("Enter Age: "))
+        course = input("Enter Course: ")
+        marks = float(input("Enter Marks: "))
+
+        # Grade Evaluation
+        if marks >= 90:
+            grade = 'A'
+        elif marks >= 75:
+            grade = 'B'
+        elif marks >= 50:
+            grade = 'C'
+        else:
+            grade = 'F'
+
+        student = {
+            "Roll": roll,
+            "Name": name,
+            "Age": age,
+            "Course": course,
+            "Marks": marks,
+            "Grade": grade
+        }
+
+        students.append(student)
+
+        print("\nStudent Registered Successfully!")
+
+    except ValueError:
+        print("Invalid Input! Please enter correct data.")
+
+
+# -----------------------------
+# DISPLAY STUDENTS
+# -----------------------------
+def display_students():
+    if len(students) == 0:
+        print("No student records found.")
+        return
+
+    print("\n------ STUDENT RECORDS ------")
+    for s in students:
+        print(s)
+
+
+# -----------------------------
+# SEARCH STUDENT
+# -----------------------------
+def search_student():
+    name = input("Enter student name to search: ")
+
+    found = False
+
+    for s in students:
+        if s["Name"].lower() == name.lower():
+            print("\nStudent Found:")
+            print(s)
+            found = True
+
+    if not found:
+        print("Student not found.")
+
+
+# -----------------------------
+# SORT STUDENTS
+# -----------------------------
+def sort_students():
+    sorted_students = sorted(students, key=lambda x: x["Marks"], reverse=True)
+
+    print("\n------ SORTED BY MARKS ------")
+    for s in sorted_students:
+        print(s)
+
+
+# -----------------------------
+# COURSE ENROLLMENT
+# -----------------------------
+def course_enrollment():
+    roll = int(input("Enter Roll Number: "))
+    new_course = input("Enter New Course: ")
+
+    for s in students:
+        if s["Roll"] == roll:
+            s["Course"] = new_course
+            print("Course Updated Successfully!")
+            return
+
+    print("Student not found.")
+
+
+# -----------------------------
+# FEE CALCULATION
+# -----------------------------
+def fee_calculation():
+    try:
+        tuition_fee = float(input("Enter Tuition Fee: "))
+        lab_fee = float(input("Enter Lab Fee: "))
+        exam_fee = float(input("Enter Exam Fee: "))
+
+        total = tuition_fee + lab_fee + exam_fee
+
+        print(f"Total Fee = ₹{total}")
+
+    except ValueError:
+        print("Invalid fee input.")
+
+
+# -----------------------------
+# SAVE RECORDS TO FILE
+# -----------------------------
+def save_to_file():
+    with open("students.txt", "w") as file:
+        for s in students:
+            file.write(str(s) + "\n")
+
+    print("Records saved successfully.")
+
+
+# -----------------------------
+# LOAD RECORDS FROM FILE
+# -----------------------------
+def load_from_file():
+    try:
+        with open("students.txt", "r") as file:
+            print("\n------ FILE RECORDS ------")
+            print(file.read())
+
+    except FileNotFoundError:
+        print("No file found.")
+
+
+# -----------------------------
+# DIRECTORY SCANNING
+# -----------------------------
+def directory_scan():
+    path = "."
+
+    try:
+        files = os.listdir(path)
+
+        print("\nFiles in Current Directory:")
+        for f in files:
+            print(f)
+
+    except Exception as e:
+        print("Error:", e)
+
+
+# -----------------------------
+# PERFORMANCE ANALYTICS
+# -----------------------------
+def analytics():
+    if len(students) == 0:
+        print("No student data available.")
+        return
+
+    df = pd.DataFrame(students)
+
+    print("\n------ DATA ANALYTICS ------")
+    print(df)
+
+    marks_array = np.array(df["Marks"])
+
+    print("\nAverage Marks:", np.mean(marks_array))
+    print("Highest Marks:", np.max(marks_array))
+    print("Lowest Marks:", np.min(marks_array))
+
+    # Graph
+    plt.bar(df["Name"], df["Marks"])
+    plt.xlabel("Students")
+    plt.ylabel("Marks")
+    plt.title("Student Performance Analysis")
+    plt.show()
+
+
+# -----------------------------
+# MAIN MENU
+# -----------------------------
+while True:
+
+    print("\n========== SMART CAMPUS INFORMATION SYSTEM ==========")
+    print("1. Register Student")
+    print("2. Display Students")
+    print("3. Search Student")
+    print("4. Sort Students")
+    print("5. Course Enrollment")
+    print("6. Fee Calculation")
+    print("7. Save Records")
+    print("8. Load Records")
+    print("9. Directory Scan")
+    print("10. Performance Analytics")
+    print("11. Exit")
+
+    choice = input("Enter your choice: ")
+
+    if choice == '1':
+        register_student()
+
+    elif choice == '2':
+        display_students()
+
+    elif choice == '3':
+        search_student()
+
+    elif choice == '4':
+        sort_students()
+
+    elif choice == '5':
+        course_enrollment()
+
+    elif choice == '6':
+        fee_calculation()
+
+    elif choice == '7':
+        save_to_file()
+
+    elif choice == '8':
+        load_from_file()
+
+    elif choice == '9':
+        directory_scan()
+
+    elif choice == '10':
+        analytics()
+
+    elif choice == '11':
+        print("Exiting Program...")
+        break
+
+    else:
+        print("Invalid Choice.")
